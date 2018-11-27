@@ -23,7 +23,7 @@ public class KubisRestServiceImpl implements KubisRestService {
   public KubisRestService getVersion(Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service version");
     webClient
-      .get("kuibs-rest", "/v1/system/version")
+      .get("kubis-rest", "/v1/system/version")
       .send(ar -> {
         if (ar.succeeded()) {
           HttpResponse<Buffer> response = ar.result();
@@ -47,7 +47,7 @@ public class KubisRestServiceImpl implements KubisRestService {
   public KubisRestService getMetadata(Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service metadata");
     webClient
-      .get("kuibs-rest", "/v1/system/metadata")
+      .get("kubis-rest", "/v1/system/metadata")
       .send(ar -> {
         if (ar.succeeded()) {
           HttpResponse<Buffer> response = ar.result();
