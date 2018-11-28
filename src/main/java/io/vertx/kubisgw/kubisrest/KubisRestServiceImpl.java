@@ -22,6 +22,7 @@ public class KubisRestServiceImpl implements KubisRestService {
 
   public KubisRestService getVersion(String appUser, Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service version");
+    if (appUser == null) appUser = "anonymous";
     webClient
       .get("kubis-rest", "/v1/system/version")
       .putHeader("X-APP-USER", appUser)
@@ -47,6 +48,7 @@ public class KubisRestServiceImpl implements KubisRestService {
 
   public KubisRestService getMetadata(String appUser, Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service metadata");
+    if (appUser == null) appUser = "anonymous";
     webClient
       .get("kubis-rest", "/v1/system/metadata")
       .putHeader("X-APP-USER", appUser)
