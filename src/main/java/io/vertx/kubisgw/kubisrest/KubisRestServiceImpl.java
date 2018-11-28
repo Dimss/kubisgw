@@ -20,10 +20,11 @@ public class KubisRestServiceImpl implements KubisRestService {
     readyHandler.handle(Future.succeededFuture(this));
   }
 
-  public KubisRestService getVersion(Handler<AsyncResult<JsonObject>> resultHandler) {
+  public KubisRestService getVersion(String appUser, Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service version");
     webClient
       .get("kubis-rest", "/v1/system/version")
+      .putHeader("X-APP-USER", appUser)
       .send(ar -> {
         if (ar.succeeded()) {
           HttpResponse<Buffer> response = ar.result();
@@ -44,10 +45,11 @@ public class KubisRestServiceImpl implements KubisRestService {
     return this;
   }
 
-  public KubisRestService getMetadata(Handler<AsyncResult<JsonObject>> resultHandler) {
+  public KubisRestService getMetadata(String appUser, Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service metadata");
     webClient
       .get("kubis-rest", "/v1/system/metadata")
+      .putHeader("X-APP-USER", appUser)
       .send(ar -> {
         if (ar.succeeded()) {
           HttpResponse<Buffer> response = ar.result();

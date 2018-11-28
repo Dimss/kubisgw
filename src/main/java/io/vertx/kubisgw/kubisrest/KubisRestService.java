@@ -11,10 +11,10 @@ import io.vertx.ext.web.client.WebClient;
 @ProxyGen
 public interface KubisRestService {
   @Fluent
-  KubisRestService getVersion(Handler<AsyncResult<JsonObject>> resultHandler);
+  KubisRestService getVersion(String appUser, Handler<AsyncResult<JsonObject>> resultHandler);
 
   @Fluent
-  KubisRestService getMetadata(Handler<AsyncResult<JsonObject>> resultHandler);
+  KubisRestService getMetadata(String appUser, Handler<AsyncResult<JsonObject>> resultHandler);
 
   static KubisRestService create (WebClient webClient, Handler<AsyncResult<KubisRestService>> readyHandler){
     return new KubisRestServiceImpl(webClient, readyHandler);

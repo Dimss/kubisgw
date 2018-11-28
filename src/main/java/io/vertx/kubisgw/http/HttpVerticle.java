@@ -34,27 +34,29 @@ public class HttpVerticle extends AbstractVerticle {
     });
   }
 
-  private void getVersion(RoutingContext ctx){
-    kubisRestService.getVersion(ar -> {
+  private void getVersion(RoutingContext ctx) {
+    String appUser = ctx.request().getHeader("X-APP-USER");
+    kubisRestService.getVersion(appUser, ar -> {
       if (ar.succeeded()) {
         ctx
           .response()
           .putHeader("content-type", "application/json")
           .end(ar.result().toString());
-      }else{
+      } else {
         ctx.fail(ar.cause());
       }
     });
   }
 
-  private void getMetadata(RoutingContext ctx){
-    kubisRestService.getMetadata(ar -> {
+  private void getMetadata(RoutingContext ctx) {
+    String appUser = ctx.request().getHeader("X-APP-USER");
+    kubisRestService.getMetadata(appUser, ar -> {
       if (ar.succeeded()) {
         ctx
           .response()
           .putHeader("content-type", "application/json")
           .end(ar.result().toString());
-      }else{
+      } else {
         ctx.fail(ar.cause());
       }
     });
