@@ -36,6 +36,7 @@ public class HttpVerticle extends AbstractVerticle {
 
   private void getVersion(RoutingContext ctx) {
     String appUser = ctx.request().getHeader("X-APP-USER");
+    LOGGER.info("X-APP-USER: "+ appUser);
     kubisRestService.getVersion(appUser, ar -> {
       if (ar.succeeded()) {
         ctx
@@ -50,6 +51,7 @@ public class HttpVerticle extends AbstractVerticle {
 
   private void getMetadata(RoutingContext ctx) {
     String appUser = ctx.request().getHeader("X-APP-USER");
+    LOGGER.info("X-APP-USER: "+ appUser);
     kubisRestService.getMetadata(appUser, ar -> {
       if (ar.succeeded()) {
         ctx
