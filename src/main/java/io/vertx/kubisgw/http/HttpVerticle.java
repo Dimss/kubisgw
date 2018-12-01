@@ -29,7 +29,7 @@ public class HttpVerticle extends AbstractVerticle {
     router.get("/circuit").handler(this::circuit);
 
 
-    httpServer.requestHandler(router::accept).listen(8081, ar -> {
+    httpServer.requestHandler(router::accept).listen(8080, ar -> {
       if (ar.succeeded()) {
         LOGGER.info("HTTP server is running on port 8080");
         startFuture.complete();

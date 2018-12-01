@@ -75,7 +75,7 @@ public class KubisRestServiceImpl implements KubisRestService {
   public KubisRestService block(Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Executing block method");
     webClient
-      .get("127.0.0.1", "/v1/system/block")
+      .get("kubis-rest", "/v1/system/block")
       .port(8080)
       .send(ar -> {
         if (ar.succeeded()) {
