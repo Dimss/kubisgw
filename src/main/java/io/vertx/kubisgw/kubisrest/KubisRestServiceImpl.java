@@ -72,4 +72,28 @@ public class KubisRestServiceImpl implements KubisRestService {
     return this;
   }
 
+  public KubisRestService block(Handler<AsyncResult<JsonObject>> resultHandler) {
+    LOGGER.info("Executing block method");
+    webClient
+      .get("127.0.0.1", "/v1/system/block")
+      .port(8080)
+      .send(ar -> {
+        if (ar.succeeded()) {
+          HttpResponse<Buffer> response = ar.result();
+          if (response.statusCode() != 200) {
+            LOGGER.error("Error during executing kubis-rest block method, Status code: " + response.statusCode());
+            resultHandler.handle(Future.failedFuture(ar.cause()));
+          }
+          else{
+            LOGGER.info("Kuibs-rest block is here, sending response");
+            resultHandler.handle(Future.succeededFuture(response.bodyAsJsonObject()));
+          }
+        }
+        else{
+          LOGGER.error("Error during fetching Kubis-rest block");
+          resultHandler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    return this;
+  }
 }
