@@ -22,9 +22,12 @@ public class KubisRestServiceImpl implements KubisRestService {
 
   public KubisRestService getVersion(String appUser, Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Fetching service version");
+    String kubisRestHost = "kubis-rest";
     if (appUser == null) appUser = "anonymous";
+    // If X-APP-USER equals insec, route request to the insecure instance of Kubis Rest service
+    if (appUser.equals("insec")) kubisRestHost = "kubis-rest-insec";
     webClient
-      .get("kubis-rest", "/v1/system/version")
+      .get(kubisRestHost, "/v1/system/version")
       .putHeader("X-APP-USER", appUser)
       .send(ar -> {
         if (ar.succeeded()) {
