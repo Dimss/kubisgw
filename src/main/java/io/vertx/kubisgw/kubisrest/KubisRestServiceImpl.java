@@ -75,11 +75,36 @@ public class KubisRestServiceImpl implements KubisRestService {
     return this;
   }
 
+  @Override
+  public KubisRestService saveMessage(JsonObject message, Handler<AsyncResult<JsonObject>> resultHandler) {
+    LOGGER.info("Saving message");
+    webClient
+      .post("kubis-rest", "/v1/system/message")
+      .putHeader("X-APP-USER", "anonymous")
+      .sendJsonObject(message, ar ->{
+        if (ar.succeeded()) {
+          HttpResponse<Buffer> response = ar.result();
+          if (response.statusCode() != 200) {
+            LOGGER.error("Error during saving  kubis-rest message, Status code: " + response.statusCode());
+            resultHandler.handle(Future.failedFuture(ar.cause()));
+          }
+          else{
+            LOGGER.info("Kuibs-rest message saving is done, sending response");
+            resultHandler.handle(Future.succeededFuture(response.bodyAsJsonObject()));
+          }
+        }
+        else{
+          LOGGER.error("Error during fetching Kubis-rest metadata");
+          resultHandler.handle(Future.failedFuture(ar.cause()));
+        }
+      });
+    return this;
+  }
+
   public KubisRestService block(Handler<AsyncResult<JsonObject>> resultHandler) {
     LOGGER.info("Executing block method");
     webClient
       .get("kubis-rest", "/v1/system/block")
-      .port(8080)
       .send(ar -> {
         if (ar.succeeded()) {
           HttpResponse<Buffer> response = ar.result();

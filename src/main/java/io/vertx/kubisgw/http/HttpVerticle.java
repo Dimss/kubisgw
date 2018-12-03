@@ -11,6 +11,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.kubisgw.MainVerticle;
 import io.vertx.kubisgw.kubisrest.KubisRestService;
 
@@ -22,11 +23,13 @@ public class HttpVerticle extends AbstractVerticle {
     kubisRestService = KubisRestService.createProxy(vertx, "kubis-rest");
     HttpServer httpServer = vertx.createHttpServer();
     Router router = Router.router(vertx);
+    router.route().handler(BodyHandler.create());
     router.get("/version").handler(this::getVersion);
     router.get("/metadata").handler(this::getMetadata);
     router.get("/health").handler(this::healthCheck);
     router.get("/error").handler(this::errorGenerator);
     router.get("/circuit").handler(this::circuit);
+    router.post("/message").handler(this::message);
 
 
     httpServer.requestHandler(router::accept).listen(8080, ar -> {
@@ -40,6 +43,22 @@ public class HttpVerticle extends AbstractVerticle {
     });
   }
 
+
+  private void message(RoutingContext ctx) {
+    String appUser = ctx.request().getHeader("X-APP-USER");
+    JsonObject message = ctx.getBodyAsJson();
+    LOGGER.info("X-APP-USER: "+ appUser);
+    kubisRestService.saveMessage(message, ar -> {
+      if (ar.succeeded()) {
+        ctx
+          .response()
+          .putHeader("content-type", "application/json")
+          .end(ar.result().toString());
+      } else {
+        ctx.fail(ar.cause());
+      }
+    });
+  }
 
   private void circuit(RoutingContext ctx) {
     CircuitBreaker breaker = CircuitBreaker.create("test-circuit-breaker", vertx,

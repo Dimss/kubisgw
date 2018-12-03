@@ -17,6 +17,9 @@ public interface KubisRestService {
   KubisRestService getMetadata(String appUser, Handler<AsyncResult<JsonObject>> resultHandler);
 
   @Fluent
+  KubisRestService saveMessage(JsonObject message, Handler<AsyncResult<JsonObject>> resultHandler);
+
+  @Fluent
   KubisRestService block(Handler<AsyncResult<JsonObject>> resultHandler);
 
   static KubisRestService create (WebClient webClient, Handler<AsyncResult<KubisRestService>> readyHandler){
